@@ -25,6 +25,7 @@ const phoneRegex = /^(\+7|7|8)?[\s\-]?\(?[0-9]{3}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{
 
 app.post('/api/contact', upload.none(), (req, res) => {
     const { name, email, phone, message, consent, captchaToken } = req.body;
+    const hasConsent = consent === true;
 
     // Валидация данных
     if (!email || !phone || !message || !consent) {
@@ -61,7 +62,7 @@ app.post('/api/contact', upload.none(), (req, res) => {
         email,
         phone,
         message,
-        consent: consent === 'true' || consent === true,
+        consent: hasConsent,
         captchaToken,
         timestamp: new Date().toISOString()
     };
@@ -107,6 +108,5 @@ app.get('/api/submissions', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Сервер запущен на http://localhost:${port}`);
     console.log(`Данные форм сохраняются в: ${dataDir}`);
 });
